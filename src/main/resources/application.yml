@@ -6,7 +6,6 @@ server:
 
 spring:
   show-sql: true
-  # Set batch size for batch processing, this is needed for importing 30,000 records under 2 minutes
   profiles:
     active: h2 # Change this to 'mysql' for production, 'h2' for development
 
