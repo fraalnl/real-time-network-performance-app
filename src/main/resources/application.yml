@@ -5,6 +5,8 @@ server:
     include-message: always
 
 spring:
+  kafka:
+    bootstrap-servers: localhost:9092
   show-sql: true
   # Set batch size for batch processing, this is needed for importing 30,000 records under 2 minutes
   profiles:
