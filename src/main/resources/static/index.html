@@ -1,1 +1,98 @@
-<h1>Hello Team1</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Network Performance Dashboard</title>
+    <link rel="stylesheet" href="css/main.css" />
+</head>
+<body>
+
+<!-- ===== TOP NAVBAR ===== -->
+<header class="navbar">
+    <div class="logo">📶 Network Monitor</div>
+    <div class="nav-items">
+        <span>Dashboard</span>
+        <span>Reports</span>
+        <span>Settings</span>
+        <span id="connectionStatus" class="connection-status">🟡 Connecting...</span>
+    </div>
+</header>
+
+<div class="layout">
+
+    <!-- ===== SIDEBAR ===== -->
+    <aside class="sidebar">
+        <h2>Navigation</h2>
+        <ul>
+            <li class="active">Dashboard</li>
+            <li>Analytics</li>
+            <li>Nodes</li>
+            <li>Alerts <span id="alertBadge" class="badge" style="display: none;">0</span></li>
+            <li>Settings</li>
+        </ul>
+
+        <!-- System Status Section -->
+        <div class="system-status">
+            <h3>System Status</h3>
+            <div class="status-item">
+                <span>Health:</span>
+                <span id="healthStatus">--/--</span>
+            </div>
+            <div class="status-item">
+                <span id="lastUpdate">Never updated</span>
+            </div>
+        </div>
+    </aside>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <main class="main-content">
+
+        <!-- Enhanced KPI Cards -->
+        <div class="kpi-cards">
+            <div class="kpi-card">
+                <h3>Average Latency</h3>
+                <p id="latency">-- ms</p>
+                <small class="kpi-subtitle">Network response time</small>
+            </div>
+            <div class="kpi-card">
+                <h3>Average Throughput</h3>
+                <p id="throughput">-- Mbps</p>
+                <small class="kpi-subtitle">Data transfer rate</small>
+            </div>
+            <div class="kpi-card">
+                <h3>Average Error Rate</h3>
+                <p id="errorRate">-- %</p>
+                <small class="kpi-subtitle">Packet loss percentage</small>
+            </div>
+        </div>
+
+        <!-- Chart Section -->
+        <div class="chart-container">
+            <div class="chart-header">
+                <h3>Real-Time Network KPIs</h3>
+                <div class="chart-controls">
+                    <button id="pauseBtn" class="control-btn">⏸️ Pause</button>
+                    <button id="refreshBtn" class="control-btn">🔄 Refresh</button>
+                </div>
+            </div>
+            <div class="chart-wrapper">
+                <canvas id="kpiChart"></canvas>
+            </div>
+        </div>
+
+
+    </main>
+
+</div>
+
+<!-- =================== JAVASCRIPT =================== -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- application modules -->
+<script type="module" src="js/realTimeMetrics.js"></script>
+<script type="module" src="js/alertsManager.js"></script>
+<script type="module" src="js/nodesView.js"></script>
+<script type="module" src="js/main.js"></script>
+
+</body>
+</html>
