@@ -40,7 +40,7 @@ public class DataInitializer implements CommandLineRunner {
             nodeToNetwork.put(nodeId, networkId);
         }
 
-        // Seed 50 metrics with node/network relationship preserved
+        // Seed 20 metrics with node/network relationship preserved
         for (int i = 0; i < 20; i++) {
             int nodeIndex = i % 20;
             int nodeId = 100 + nodeIndex;
