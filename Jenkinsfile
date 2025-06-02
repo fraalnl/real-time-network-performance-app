@@ -88,8 +88,8 @@ pipeline {
 
         stage('Docker Compose Up') {
             steps {
-                echo 'Starting Docker containers with docker-compose...'
-                bat 'docker-compose up -d'
+                echo 'Starting Docker containers with docker-compose (no build)...'
+                bat 'docker-compose up -d --no-build'
             }
         }
 

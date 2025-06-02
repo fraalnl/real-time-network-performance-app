@@ -65,7 +65,6 @@ spring.log
 .tmp/
 
 # Git Files
-*.orig
 .gitattributes
 
 # Windows Batch Files

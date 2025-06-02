@@ -7,5 +7,5 @@ server:
 spring:
   show-sql: true
   profiles:
-    active: h2 # Change this to 'mysql' for production, 'h2' for development
+    active: mysql # Change this to 'mysql' for production, 'h2' for development
 

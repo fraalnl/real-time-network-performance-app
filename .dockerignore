@@ -1,0 +1,18 @@
+# Ignore source code not needed for the runtime image
+src/
+tests/
+.gradle/
+# unnecessary inside Docker if your Docker image already includes Maven
+# mvnw for Unix/Linux/macOS
+# mvnw.cmd: windows
+mvnw
+mvnw.cmd
+*.sh
+*.bat
+*.iml
+.idea/
+.git/
+*.log
+
+# Ignore build output (already handled by multi-stage)
+target/
