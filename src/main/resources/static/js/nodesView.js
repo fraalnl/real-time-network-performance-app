@@ -174,8 +174,17 @@ class NodesView {
         const kpiCards = document.querySelector('.kpi-cards');
         const chartContainer = document.querySelector('.chart-container');
 
+        // Hide alerts view
+        const alertsView = document.getElementById('alertsView');
+
         if (kpiCards) kpiCards.style.display = 'none';
         if (chartContainer) chartContainer.style.display = 'none';
+        if (alertsView) alertsView.style.display = 'none';
+
+        // Also call the alertsView hide method if available
+        if (window.alertsView && window.alertsView.hideAlertsView) {
+            window.alertsView.hideAlertsView();
+        }
     }
 
     showDashboardView() {
@@ -195,7 +204,17 @@ class NodesView {
         try {
             if (loadingIndicator) loadingIndicator.style.display = 'flex';
 
-            const response = await fetch(`${API_BASE_URL}/realtime`);
+            const token = localStorage.getItem("authToken");
+            const headers = {};
+
+            if (token) {
+                headers['Authorization'] = 'Bearer ' + token;
+            }
+
+            const response = await fetch(`${API_BASE_URL}/realtime`, {
+                headers: headers
+            });
+
             if (!response.ok) throw new Error('Failed to fetch nodes data');
 
             this.nodesData = await response.json();

@@ -1,8 +1,10 @@
 // main.js
 // Main entry point that wires up all user story modules
 
-import { startRealTimeKPIUpdates, pauseUpdates, resumeUpdates, isPausedState } from './realTimeMetrics.js';import { AlertsManager } from './alertsManager.js';
+import { startRealTimeKPIUpdates, pauseUpdates, resumeUpdates, isPausedState } from './realTimeMetrics.js';
+import { AlertsManager } from './alertsManager.js';
 import { NodesView } from './nodesView.js';
+import { AlertsView } from './alertsView.js';
 
 let currentView = 'dashboard';
 
@@ -17,7 +19,7 @@ function initializeDashboard() {
     // 1. Start real-time KPI updates (User Story 1)
     startRealTimeKPIUpdates();
 
-    // 2. Initialize alerts manager
+    // 2. Initialize alerts manager (popup notifications)
     const alertsManager = new AlertsManager();
     alertsManager.initialize();
 
@@ -25,16 +27,18 @@ function initializeDashboard() {
     window.nodesView = new NodesView();
     window.nodesView.initialize();
 
-    // 4. Setup control buttons
+    // 4. Initialize alerts view and make it globally available
+    window.alertsView = new AlertsView();
+    window.alertsView.initialize();
+
+    // 5. Setup control buttons
     setupControlButtons();
 
-    // 5. Initialize connection status
+    // 6. Initialize connection status
     updateConnectionStatus();
 
-    // 6. Setup navigation handlers
+    // 7. Setup navigation handlers
     setupNavigation();
-
-
 
     console.log("✅ Dashboard initialization complete");
 }
@@ -118,8 +122,11 @@ async function checkAPIConnection() {
 
     try {
         // Try to reach your Spring Boot API
-        const response = await fetch('http://localhost:8080/api/metrics/summary', {
+        const response = await fetch('http://localhost:8081/api/metrics/summary', {
             method: 'HEAD', // Just check if endpoint exists
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('authToken')
+            },
             timeout: 5000
         });
 
@@ -187,6 +194,7 @@ function setupNavigation() {
 function handleNavigation(section) {
     console.log(`📍 Navigating to: "${section}"`);
     console.log('🔍 Available nodesView:', !!window.nodesView);
+    console.log('🔍 Available alertsView:', !!window.alertsView);
 
     // Clean the section text (remove badge numbers and extra whitespace)
     const cleanSection = section.toLowerCase().trim();
@@ -201,7 +209,12 @@ function handleNavigation(section) {
         case 'nodes':
             showNodesView();
             break;
-
+        case 'alerts':
+            showAlertsView();
+            break;
+        case 'analytics':
+            showAnalyticsView();
+            break;
         default:
             console.log(`❓ Unknown navigation: "${section}" -> "${cleanSection}"`);
             // Default to dashboard if unknown
@@ -224,16 +237,17 @@ function handleNavigation(section) {
             console.log('✅ Chart container shown');
         }
 
-        // Hide nodes view
+        // Hide other views
         if (window.nodesView) {
             window.nodesView.hideNodesView();
             console.log('✅ Nodes view hidden');
         }
+        if (window.alertsView) {
+            window.alertsView.hideAlertsView();
+            console.log('✅ Alerts view hidden');
+        }
     }
 
-
-
-// ✅ NEW (actual implementation) - What you need
     function showNodesView() {
         console.log('🖥️ Activating Nodes view');
 
@@ -247,27 +261,45 @@ function handleNavigation(section) {
         }
     }
 
-        // Add window focus/blur handlers
-        window.addEventListener('focus', () => {
-            if (!isPaused) {
-                console.log('Window focused - resuming updates');
-                forceRefresh();
-            }
-        });
+    function showAlertsView() {
+        console.log('🚨 Activating Alerts view');
 
-        window.addEventListener('blur', () => {
-            console.log('Window blurred');
-            // You could pause updates when window is not visible to save resources
-        });
-
-        // Add periodic connection check
-        setInterval(checkAPIConnection, 30000); // Check every 30 seconds
+        if (window.alertsView) {
+            window.alertsView.showAlertsView();
+            console.log('✅ Alerts view activated');
+        } else {
+            console.error('❌ AlertsView not available! Check initialization.');
+            // Fallback to dashboard
+            showDashboardView();
+        }
     }
 
+    function showAnalyticsView() {
+        console.log('📈 Analytics view not implemented yet');
+        // Placeholder for future analytics implementation
+        showDashboardView(); // Fallback to dashboard for now
+    }
+
+    // Add window focus/blur handlers
+    window.addEventListener('focus', () => {
+        if (!isPaused) {
+            console.log('Window focused - resuming updates');
+            forceRefresh();
+        }
+    });
+
+    window.addEventListener('blur', () => {
+        console.log('Window blurred');
+        // You could pause updates when window is not visible to save resources
+    });
+
+    // Add periodic connection check
+    setInterval(checkAPIConnection, 30000); // Check every 30 seconds
+}
+
 // Export functions for global access
-    window.togglePause = togglePause;
-    window.forceRefresh = forceRefresh;
-    window.isPaused = () => isPaused;
+window.togglePause = togglePause;
+window.forceRefresh = forceRefresh;
+window.isPaused = () => isPaused;
 
-    console.log("🎯 Main.js loaded successfully");
-
+console.log("🎯 Main.js loaded successfully");
