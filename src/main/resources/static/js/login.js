@@ -159,11 +159,31 @@ $(document).ready(function() {
         $("#logoutModal").modal("show");
     });
 
-    // Confirm Logout: Clear token, reset userRole, destroy DataTable, and return to login page.
-    $("#confirmLogoutBtn").on("click", function() {
+    // Confirm logout
+    $(document).on("click", "#confirmLogoutBtn", function() {
+        console.log("✅ Logout confirmed");
+
         localStorage.removeItem("authToken");
         localStorage.removeItem("userRole");
         sessionStorage.setItem("logoutMessage", "✔ You have successfully logged out!");
-        window.location.href = "/index.html";
+
+        // Blur the focused button to avoid aria-hidden issue
+        this.blur();
+        $("#logoutModal").modal("hide");
+
+        // Clean up dashboard
+        window.shutdownDashboard();
+
+        $("#loginSection").removeClass("d-none");
+        $("#dashboardSection").addClass("d-none");
+        $(".layout, .nav-items").addClass("d-none");
+        $("#logoutBtn, #createEngineerSpan").addClass("d-none");
+
+        $("#loginForm")[0].reset();
+        $("#loginError").addClass("d-none").html("");
+
+        $.ajaxSetup({ headers: { Authorization: "" } });
+
+        showAlert("Successfully logged out!", "success");
     });
 });

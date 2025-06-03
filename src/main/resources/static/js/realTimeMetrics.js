@@ -131,10 +131,17 @@ function initializeChart() {
 
 async function updateKPIData() {
     try {
+        // Get auth token from localStorage
+        const token = localStorage.getItem("authToken");
+        const headers = {};
+
+        if (token) {
+            headers['Authorization'] = 'Bearer ' + token;
+        }
         // Fetch real-time metrics from your REST API
         const [summaryResponse, realtimeResponse] = await Promise.all([
-            fetch(`${API_BASE_URL}/summary`),
-            fetch(`${API_BASE_URL}/realtime`)
+            fetch(`${API_BASE_URL}/summary`, { headers }),
+            fetch(`${API_BASE_URL}/realtime`, { headers })
         ]);
 
         if (!summaryResponse.ok || !realtimeResponse.ok) {

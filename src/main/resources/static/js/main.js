@@ -273,7 +273,8 @@ function handleNavigation(section) {
         });
 
         // Add periodic connection check
-        setInterval(checkAPIConnection, 30000); // Check every 30 seconds
+        window.connectionCheckInterval = setInterval(checkAPIConnection, 30000);
+    // Check every 30 seconds
     }
 
 // Export functions for global access
@@ -283,3 +284,27 @@ function handleNavigation(section) {
 
     console.log("🎯 Main.js loaded successfully");
 
+function shutdownDashboard() {
+    console.log("🛑 Shutting down dashboard...");
+
+    // Stop KPI updates
+    pauseUpdates();
+
+    // Clear the 30s connection check interval
+    if (window.connectionCheckInterval) {
+        clearInterval(window.connectionCheckInterval);
+        window.connectionCheckInterval = null;
+    }
+
+    // Optionally clean up nodesView
+    if (window.nodesView) {
+        window.nodesView.destroy?.(); // if you have a destroy method
+        window.nodesView = null;
+    }
+
+    // Remove navigation event listeners if needed (optional)
+
+    console.log("🧹 Dashboard shutdown complete.");
+}
+
+window.shutdownDashboard = shutdownDashboard;
