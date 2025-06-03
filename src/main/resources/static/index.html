@@ -6,6 +6,7 @@
     <title>Network Performance Dashboard</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/main.css"/>
+    <link rel="stylesheet" href="css/login.css"/>
 </head>
 <body>
 
@@ -15,8 +16,12 @@
     <div class="nav-items">
         <span>Dashboard</span>
         <span>Reports</span>
-        <span id="openLogin">Settings</span>
+        <!-- Admin-only actions -->
+        <span id="createEngineerSpan">Settings</span>
         <span id="connectionStatus" class="connection-status">🟡 Connecting...</span>
+        <!-- Logout span; initially hidden -->
+        <span id="logoutBtn">Logout</span>
+        </li>
     </div>
 </header>
 
@@ -66,7 +71,41 @@
     </div>
 </div>
 
-<div class="layout">
+<!-- Create Engineer Modal -->
+<div class="modal fade" id="createEngineerModal" tabindex="-1" role="dialog"
+     aria-labelledby="createEngineerModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form id="createEngineerForm">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createEngineerModalLabel">Create Engineer Account</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="engineerUsername">Username</label>
+                        <input type="text" class="form-control" id="engineerUsername" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="engineerPassword">Password</label>
+                        <input type="password" class="form-control" id="engineerPassword" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Create Account</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Alert placeholder -->
+<div id="alertPlaceholder" style="position: fixed; top: 20px; right: 20px; z-index: 1050;"></div>
+
+<div id="dashboardSection" class="layout">
 
     <!-- ===== SIDEBAR ===== -->
     <aside class="sidebar">
@@ -138,11 +177,11 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <!-- application modules -->
-<script type="module" src="js/login.js"></script>
 <script type="module" src="js/realTimeMetrics.js"></script>
 <script type="module" src="js/alertsManager.js"></script>
 <script type="module" src="js/nodesView.js"></script>
 <script type="module" src="js/main.js"></script>
+<script type="module" src="js/login.js"></script>
 
 </body>
 </html>

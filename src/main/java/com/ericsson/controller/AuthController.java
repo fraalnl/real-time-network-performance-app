@@ -42,7 +42,7 @@ public class AuthController {
                     role = "ROLE_ENGINEER";
                 }
                 String token = jwtUtil.generateToken(userDetails.getUsername(), role);
-                return ResponseEntity.ok(Map.of("token", token));
+                return ResponseEntity.ok(Map.of("token", token, "role", role));
             } else {//If the password does not match, it returns an HTTP 401 (Unauthorized) response
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                         .body(Map.of("error", "Invalid credentials. Please try again."));

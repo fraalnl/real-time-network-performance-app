@@ -1,4 +1,4 @@
-package com.ericsson.integration;
+package com.ericsson.service;
 
 import com.ericsson.model.PerformanceData;
 import com.ericsson.service.MetricsService;

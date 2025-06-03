@@ -195,7 +195,17 @@ class NodesView {
         try {
             if (loadingIndicator) loadingIndicator.style.display = 'flex';
 
-            const response = await fetch(`${API_BASE_URL}/realtime`);
+            const token = localStorage.getItem("authToken");
+            const headers = {};
+
+            if (token) {
+                headers['Authorization'] = 'Bearer ' + token;
+            }
+
+            const response = await fetch(`${API_BASE_URL}/realtime`, {
+                headers: headers
+            });
+
             if (!response.ok) throw new Error('Failed to fetch nodes data');
 
             this.nodesData = await response.json();

@@ -1,33 +1,89 @@
 $(document).ready(function() {
     const baseURL = "http://localhost:8081";
-    //JWT token is stored in a variable, will be lost when the page is refreshed
-    let token = '';
-    let userRole = '';
+    const token = localStorage.getItem('authToken');
+    let userRole = localStorage.getItem('userRole');
+
+    $('#loginSection').removeClass("d-none");
+    $('#dashboardSection').addClass("d-none");
+    $('.layout').addClass("d-none")
+    $('.nav-items').addClass("d-none")
+    $('#logoutBtn').addClass("d-none");
+    $('#createEngineerSpan').addClass("d-none");
+
+
+    // If token exists (page reload), restore AJAX headers & UI
+    if (token) {
+        $.ajaxSetup({
+            headers: {
+                'Authorization': 'Bearer ' + token
+            }
+        });
+
+        $('#loginSection').addClass("d-none");
+        $('#dashboardSection').removeClass("d-none");
+        $('.layout').removeClass("d-none")
+        $('.nav-items').removeClass("d-none")
+        console.log("✅ Nav items shown");
+        $('#logoutBtn').removeClass("d-none");
+        console.log("✅ Logout button shown");
+        $('#createEngineerSpan').toggleClass("d-none", userRole !== 'ROLE_ADMIN');
+
+        // Initialize dashboard and connection check
+        window.initializeDashboard();
+        window.updateConnectionStatus();
+    }
 
     // Handle login form submission
     $("#loginForm").on("submit", function(e) {
         e.preventDefault();
-        const username = $("#username").val();
-        const password = $("#password").val();
+        const username = $("#username").val().trim();
+        const password = $("#password").val().trim();
+
+        if (!username || !password) {
+            showAlert("Username and Password are required.");
+            return;
+        }
+
         $.ajax({
             url: baseURL + "/api/auth/login",
             method: "POST",
             contentType: "application/json",
             data: JSON.stringify({ username: username, password: password }),
             success: function(response) {
+                console.log("Login response:", response);
+
                 // Clear any previous error message
                 $("#loginError").addClass("d-none").html('');
-                token = response.token; //return ResponseEntity.ok(Map.of("token", token));
-                userRole = (username.toLowerCase() === 'admin') ? 'ADMIN' : 'ENGINEER';
-                $("#loginSection").hide();
-                $("#dashboardSection").removeClass("d-none").removeClass("hidden");
-                $("#logoutBtn").removeClass("d-none").removeClass("hidden");
-                if (userRole === 'ADMIN') {
-                    $("#adminActions").removeClass("d-none").removeClass("hidden");
-                }
-                loadRooms();
+
+                localStorage.setItem('authToken', response.token);
+                localStorage.setItem('userRole', response.role); // store role if returned
+                userRole = response.role; // Update variable here
+
+                // Make sure all future AJAX calls use the token
+                $.ajaxSetup({
+                    headers: {
+                        'Authorization': 'Bearer ' + response.token
+                    }
+                });
+
+                $("#loginSection").addClass("d-none");
+                // dashboard hidden until user logs in
+                $("#dashboardSection").removeClass("d-none");
+                console.log("✅ dashboardSection shown");
+                $('.layout').removeClass("d-none")
+                $('.nav-items').removeClass("d-none")
+                console.log("✅ Nav items shown");
+                $("#logoutBtn").removeClass("d-none");
+
+                console.log("userRole: ", userRole); // not printed
+                $('#createEngineerSpan').toggleClass("d-none", userRole !== 'ROLE_ADMIN');
+
+                window.initializeDashboard();
+                // ✅ Then start connection check
+                window.updateConnectionStatus();  // Now this runs AFTER user is authenticated
+
             },
-            error: function(xhr, status, error) {
+            error: function(xhr) {
                 let errorMessage = "Invalid credentials. Please try again.";
                 // Try to parse JSON error message if available
                 try {
@@ -61,34 +117,39 @@ $(document).ready(function() {
     }
 
     // Show Create Engineer Account Modal (admin only)
-    $("#createEngineerBtn").on("click", function() {
-        $("#createEngineerForm")[0].reset();
-        $("#createEngineerModal").modal("show");
+    $("#createEngineerSpan").on("click", function () {
+        const modal = $("#createEngineerModal");
+
+        if (modal.length) {
+            $("#createEngineerForm")[0].reset();
+            modal.modal("show");
+        } else {
+            console.warn("#createEngineerModal not found in DOM");
+        }
     });
 
     // Handle Create Engineer Account form submission
     $("#createEngineerForm").on("submit", function(e) {
         e.preventDefault();
-        const studentData = {
-            username: $("#studentUsername").val(),
-            email: $("#studentEmail").val(),
-            password: $("#studentPassword").val()
+        const engineerData = {
+            username: $("#engineerUsername").val(),
+            password: $("#engineerPassword").val()
         };
         $.ajax({
             url: baseURL + "/api/performance/engineers",
             method: "POST",
             contentType: "application/json",
-            headers: { "Authorization": "Bearer " + token },
-            data: JSON.stringify(studentData),
+            headers: { "Authorization": "Bearer " + localStorage.getItem('authToken') },
+            data: JSON.stringify(engineerData),
             success: function(response) {
                 $(document.activeElement).blur();
-                $("#createStudentModal").modal("hide");
+                $("#createEngineerModal").modal("hide");
                 setTimeout(function() {
                     showAlert(response.message, "success");
                 }, 500);
             },
             error: function() {
-                showAlert("Failed to create ngineer account", "danger");
+                showAlert("Failed to create engineer account", "danger");
             }
         });
     });
@@ -100,15 +161,9 @@ $(document).ready(function() {
 
     // Confirm Logout: Clear token, reset userRole, destroy DataTable, and return to login page.
     $("#confirmLogoutBtn").on("click", function() {
-        token = '';
-        userRole = '';
-        if (roomsTable) {
-            roomsTable.destroy();
-        }
-        $("#dashboardSection").addClass("hidden");
-        $("#logoutBtn").addClass("hidden");
-        $("#adminActions").addClass("hidden");
-        $("#loginSection").show();
-        $("#logoutModal").modal("hide");
+        localStorage.removeItem("authToken");
+        localStorage.removeItem("userRole");
+        sessionStorage.setItem("logoutMessage", "✔ You have successfully logged out!");
+        window.location.href = "/index.html";
     });
 });

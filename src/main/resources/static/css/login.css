@@ -1,5 +1,24 @@
-#openLogin {
+/* Style for the clickable text */
+#createEngineerSpan {
     cursor: pointer;
     color: #007bff;
     text-decoration: underline;
+}
+
+/* Ensure modal displays properly and is on top */
+#createEngineerModal.modal {
+    display: none; /* Will be shown via Bootstrap’s JS */
+    position: fixed;
+    z-index: 1050; /* Bootstrap default for modals */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.6); /* optional: dim background */
+}
+
+/* Optional: modal content tweaks */
+#createEngineerModal .modal-dialog {
+    margin-top: 10%;
 }

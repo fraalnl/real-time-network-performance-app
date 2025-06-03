@@ -41,7 +41,17 @@ class AlertsManager {
 
     async checkForAlerts() {
         try {
-            const response = await fetch(`${API_BASE_URL}/alerts`);
+            const token = localStorage.getItem("authToken");
+            const headers = {};
+
+            if (token) {
+                headers['Authorization'] = 'Bearer ' + token;
+            }
+
+            const response = await fetch(`${API_BASE_URL}/alerts`, {
+                headers: headers
+            });
+
             if (!response.ok) throw new Error('Failed to fetch alerts');
 
             const alerts = await response.json();
@@ -178,4 +188,4 @@ class AlertsManager {
 export { AlertsManager };
 
 // Global instance
-window.alertsManager = new AlertsManager();
+//window.alertsManager = new AlertsManager();

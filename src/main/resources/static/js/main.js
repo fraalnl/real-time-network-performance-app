@@ -7,10 +7,16 @@ import { NodesView } from './nodesView.js';
 let currentView = 'dashboard';
 
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("🚀 Network Performance Dashboard Initialized");
+    console.log("🚀 Main.js loaded. Waiting for login...");
 
-    // Initialize all dashboard components
-    initializeDashboard();
+    const token = localStorage.getItem("authToken");
+    if (token) {
+        $.ajaxSetup({
+            headers: {
+                'Authorization': 'Bearer ' + token
+            }
+        });
+    }
 });
 
 function initializeDashboard() {
@@ -29,7 +35,7 @@ function initializeDashboard() {
     setupControlButtons();
 
     // 5. Initialize connection status
-    updateConnectionStatus();
+    // updateConnectionStatus();
 
     // 6. Setup navigation handlers
     setupNavigation();
@@ -38,6 +44,9 @@ function initializeDashboard() {
 
     console.log("✅ Dashboard initialization complete");
 }
+
+window.initializeDashboard = initializeDashboard; // Make it globally visible
+window.updateConnectionStatus = updateConnectionStatus;
 
 function setupControlButtons() {
     const pauseBtn = document.getElementById('pauseBtn');
@@ -118,8 +127,11 @@ async function checkAPIConnection() {
 
     try {
         // Try to reach your Spring Boot API
-        const response = await fetch('http://localhost:8080/api/metrics/summary', {
+        const response = await fetch('http://localhost:8081/api/metrics/summary', {
             method: 'HEAD', // Just check if endpoint exists
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('authToken')
+            },
             timeout: 5000
         });
 
