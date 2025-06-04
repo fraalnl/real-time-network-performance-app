@@ -252,4 +252,31 @@ public class MetricsService {
                 data.getThroughput() < (LOW_THROUGHPUT_THRESHOLD * 0.5) ||
                 data.getErrorRate() > (HIGH_ERROR_RATE_THRESHOLD * 2.0);
     }
+
+    // Get KPI summary for a specific time range for the historical data analysis
+    public Map<String, Object> getKpiSummaryForRange(String range) {
+        LocalDateTime startTime = switch (range.toLowerCase()) {
+            case "last_5_minutes" -> LocalDateTime.now().minusMinutes(5);
+            case "last_1_hour" -> LocalDateTime.now().minusHours(1);
+            case "last_24_hours" -> LocalDateTime.now().minusHours(24);
+            default -> throw new IllegalArgumentException("Invalid range");
+        };
+
+        List<PerformanceData> recent = repository.findByTimestampAfter(startTime);
+
+        double avgLatency = recent.stream().mapToDouble(PerformanceData::getLatency).average().orElse(0);
+        double avgThroughput = recent.stream().mapToDouble(PerformanceData::getThroughput).average().orElse(0);
+        double avgErrorRate = recent.stream().mapToDouble(PerformanceData::getErrorRate).average().orElse(0);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("range", range);
+        result.put("avgLatency", avgLatency);
+        result.put("avgThroughput", avgThroughput);
+        result.put("avgErrorRate", avgErrorRate);
+        result.put("sampleSize", recent.size());
+
+        return result;
+    }
+
+
 }
