@@ -63,4 +63,13 @@ public class MetricsController {
         Map<String, List<PerformanceData>> healthGroups = metricsService.getNodesByHealthStatus();
         return ResponseEntity.ok(healthGroups);
     }
+
+    // Get KPI summary for a specific time range for historical analysis
+    @GetMapping("/summary/range")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_ENGINEER')")
+    public ResponseEntity<Map<String, Object>> getSummaryForRange(@RequestParam String range) {
+        Map<String, Object> summary = metricsService.getKpiSummaryForRange(range);
+        return ResponseEntity.ok(summary);
+    }
+
 }
