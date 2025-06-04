@@ -9,7 +9,7 @@ pipeline {
         SONAR_HOST_URL = 'http://localhost:9000'
         SONARQUBE_TOKEN = credentials('jenkins-network-performance') //configured in Jenkins
         SONAR_PROJECT_KEY = 'jenkins-network-performance' //configured in sonarqube
-        DOCKER_IMAGE = 'network-performance-dashboard'
+        DOCKER_IMAGE = 'network-monitor'
         DOCKER_TAG = 'latest'
 //        DOCKERHUB_CREDENTIALS = 'dockerhub-credentials' // Jenkins credentials for Docker Hub login, configured
        DOCKERHUB_USERNAME = 'fraalnl'
