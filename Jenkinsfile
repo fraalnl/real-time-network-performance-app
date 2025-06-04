@@ -12,7 +12,7 @@ pipeline {
         DOCKER_IMAGE = 'network-performance-dashboard'
         DOCKER_TAG = 'latest'
 //        DOCKERHUB_CREDENTIALS = 'dockerhub-credentials' // Jenkins credentials for Docker Hub login, configured
-//        DOCKERHUB_USERNAME = 'fraalnl'
+       DOCKERHUB_USERNAME = 'fraalnl'
     }
 
     stages {
@@ -78,7 +78,7 @@ pipeline {
         stage('Docker Build') {
             steps {
                 script {
-                    String imageName = "${env.DOCKER_IMAGE}:${env.DOCKER_TAG}"
+                    String imageName = "${env.DOCKERHUB_USERNAME}/${env.DOCKER_IMAGE}:${env.DOCKER_TAG}"
                     echo "Building Docker image: ${imageName}"
                     bat "docker build -t ${imageName} ."
                     echo "Docker build complete"
