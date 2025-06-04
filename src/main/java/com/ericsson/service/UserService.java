@@ -49,5 +49,4 @@ public class UserService {
             throw new RuntimeException("Failed to create user: " + e.getMessage());
         }
     }
-
 }
