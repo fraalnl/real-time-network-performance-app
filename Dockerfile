@@ -8,5 +8,5 @@ RUN mvn clean package -DskipTests
 # Stage 2: Runtime
 FROM eclipse-temurin:17-jdk-alpine
 WORKDIR /app
-COPY --from=builder /build/target/real-time-network-performance-app.jar app.jar
+COPY --from=builder /build/target/real-time-network-performance-app-0.0.1-SNAPSHOT.jar app.jar
 ENTRYPOINT ["java", "-jar", "app.jar"]

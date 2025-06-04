@@ -7,6 +7,7 @@ server:
 spring:
   kafka:
     bootstrap-servers: localhost:9092
+
   show-sql: true
   profiles:
     active: mysql # Change this to 'mysql' for production, 'h2' for development

@@ -1,5 +1,3 @@
-# Ignore source code not needed for the runtime image
-src/
 tests/
 .gradle/
 # unnecessary inside Docker if your Docker image already includes Maven
