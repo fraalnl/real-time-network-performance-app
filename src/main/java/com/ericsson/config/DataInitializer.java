@@ -53,7 +53,7 @@ public class DataInitializer implements CommandLineRunner {
             BigDecimal errorRate = BigDecimal.valueOf(0.2 * (i % 5))
                     .setScale(3, RoundingMode.HALF_UP);
             data.setErrorRate(errorRate.doubleValue());
-            data.setTimestamp(LocalDateTime.now().minusMinutes(i * 3));
+            data.setTimestamp(LocalDateTime.now().minusMinutes((long) i * 3));
 
             repository.save(data);
         }

@@ -16,8 +16,8 @@ class NetworkPerformanceConsumerTest {
         NetworkPerformanceConsumer consumer = new NetworkPerformanceConsumer(repository);
 
         PerformanceData data = new PerformanceData(1, 2, 20.0, 100.0, 0.5, LocalDateTime.now());
-        // record: Rename this variable to not match a restricted identifier.
-        ConsumerRecord<String, PerformanceData> record = new ConsumerRecord<>("network-performance", 0, 0, null, data);
+        // performanceRecord: Rename this variable to not match a restricted identifier.
+        ConsumerRecord<String, PerformanceData> performanceRecord = new ConsumerRecord<>("network-performance", 0, 0, null, data);
 
         PerformanceData expectedEntity = new PerformanceData();
         expectedEntity.setNodeId(data.getNodeId());
@@ -30,7 +30,7 @@ class NetworkPerformanceConsumerTest {
         // Fix: Stub repository to return the saved entity
         Mockito.when(repository.save(Mockito.any())).thenReturn(expectedEntity);
 
-        consumer.consumePerformanceData(record);
+        consumer.consumePerformanceData(performanceRecord);
 
         // Validate interaction
         Mockito.verify(repository).save(Mockito.argThat(entity ->

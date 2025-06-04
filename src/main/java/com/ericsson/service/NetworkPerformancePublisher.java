@@ -13,14 +13,14 @@ public class NetworkPerformancePublisher {
 
     private final KafkaTemplate<String, PerformanceData> kafkaTemplate;
     //Rename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.
-    private static final String topicName = "network-performance";
+    private static final String TOPIC_NAME = "network-performance";
 
     public NetworkPerformancePublisher(KafkaTemplate<String, PerformanceData> kafkaTemplate) {
         this.kafkaTemplate = kafkaTemplate;
     }
 
     public void sendPerformanceData(PerformanceData message) {
-        kafkaTemplate.send(topicName, message);
+        kafkaTemplate.send(TOPIC_NAME, message);
         logger.info("Published performance data: {}", message);
     }
 }

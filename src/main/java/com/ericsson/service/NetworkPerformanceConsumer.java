@@ -22,9 +22,9 @@ public class NetworkPerformanceConsumer {
 
     @KafkaListener(topics = "network-performance", groupId = "network-performance-group")
     @Transactional
-    // record: Rename this variable to not match a restricted identifier.
-    public void consumePerformanceData(ConsumerRecord<String, PerformanceData> record) {
-        PerformanceData message = record.value();
+    // consumerRecord: Rename this variable to not match a restricted identifier.
+    public void consumePerformanceData(ConsumerRecord<String, PerformanceData> consumerRecord) {
+        PerformanceData message = consumerRecord.value();
         try {
             PerformanceData savedData = repository.save(message);
             logger.info("Saved performance data to DB: Node {}, Network {}, Latency: {}ms",

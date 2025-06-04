@@ -15,6 +15,12 @@ public class MetricsService {
 
     private static final Logger logger = LoggerFactory.getLogger(MetricsService.class);
 
+    private static final String CRITICAL = "critical";
+    private static final String HEALTHY = "healthy";
+    private static final String HEALTHY_NODES = "healthyNodes";
+    private static final String TOTAL_NODES = "totalNodes";
+    private static final String WARNING = "warning";
+
     private final PerformanceDataRepository repository;
 
     // Anomaly detection thresholds
@@ -66,8 +72,8 @@ public class MetricsService {
             logger.info("No metrics available for KPI summary");
             Map<String, Object> emptyResponse = new HashMap<>();
             emptyResponse.put("message", "No data available");
-            emptyResponse.put("totalNodes", 0);
-            emptyResponse.put("healthyNodes", 0);
+            emptyResponse.put(TOTAL_NODES, 0);
+            emptyResponse.put(HEALTHY_NODES, 0);
             emptyResponse.put("averageLatency", 0.0);
             emptyResponse.put("averageThroughput", 0.0);
             emptyResponse.put("averageErrorRate", 0.0);
@@ -113,8 +119,8 @@ public class MetricsService {
 
         // Build summary response
         Map<String, Object> summary = new HashMap<>();
-        summary.put("totalNodes", totalNodes);
-        summary.put("healthyNodes", healthyNodes);
+        summary.put(TOTAL_NODES, totalNodes);
+        summary.put(HEALTHY_NODES, healthyNodes);
         summary.put("criticalNodes", criticalNodes);
         summary.put("healthPercentage", totalNodes > 0 ? Math.round((healthyNodes * 100.0) / totalNodes) : 0);
 
@@ -151,8 +157,8 @@ public class MetricsService {
 
         byNetwork.forEach((networkId, nodes) -> {
             Map<String, Object> netStats = new HashMap<>();
-            netStats.put("totalNodes", nodes.size());
-            netStats.put("healthyNodes", nodes.stream().mapToInt(node -> isNodeHealthy(node) ? 1 : 0).sum());
+            netStats.put(TOTAL_NODES, nodes.size());
+            netStats.put(HEALTHY_NODES, nodes.stream().mapToInt(node -> isNodeHealthy(node) ? 1 : 0).sum());
             netStats.put("avgLatency", Math.round(nodes.stream().mapToDouble(PerformanceData::getLatency).average().orElse(0.0) * 100.0) / 100.0);
             netStats.put("avgThroughput", Math.round(nodes.stream().mapToDouble(PerformanceData::getThroughput).average().orElse(0.0) * 100.0) / 100.0);
             netStats.put("avgErrorRate", Math.round(nodes.stream().mapToDouble(PerformanceData::getErrorRate).average().orElse(0.0) * 1000.0) / 1000.0);
@@ -209,22 +215,22 @@ public class MetricsService {
         List<PerformanceData> latestMetrics = getLatestMetricsForAllNodes();
 
         Map<String, List<PerformanceData>> grouped = new HashMap<>();
-        grouped.put("healthy", new ArrayList<>());
-        grouped.put("warning", new ArrayList<>());
-        grouped.put("critical", new ArrayList<>());
+        grouped.put(HEALTHY, new ArrayList<>());
+        grouped.put(WARNING, new ArrayList<>());
+        grouped.put(CRITICAL, new ArrayList<>());
 
         for (PerformanceData data : latestMetrics) {
             if (isNodeCritical(data)) {
-                grouped.get("critical").add(data);
+                grouped.get(CRITICAL).add(data);
             } else if (isNodeHealthy(data)) {
-                grouped.get("healthy").add(data);
+                grouped.get(HEALTHY).add(data);
             } else {
-                grouped.get("warning").add(data);
+                grouped.get(WARNING).add(data);
             }
         }
 
         logger.debug("Grouped nodes by health: {} healthy, {} warning, {} critical",
-                grouped.get("healthy").size(), grouped.get("warning").size(), grouped.get("critical").size());
+                grouped.get(HEALTHY).size(), grouped.get(WARNING).size(), grouped.get(CRITICAL).size());
 
         return grouped;
     }
