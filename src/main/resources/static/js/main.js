@@ -1,7 +1,7 @@
 // main.js
 // Main entry point that wires up all user story modules
 
-import { startRealTimeKPIUpdates, pauseUpdates, resumeUpdates, isPausedState } from './realTimeMetrics.js';
+import { startRealTimeKPIUpdates, pauseUpdates, resumeUpdates, stopAllUpdates, isPausedState } from './realTimeMetrics.js';
 import { AlertsManager } from './alertsManager.js';
 import { NodesView } from './nodesView.js';
 import { AlertsView } from './alertsView.js';

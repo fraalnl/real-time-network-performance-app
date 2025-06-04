@@ -6,6 +6,7 @@
     <title>Network Performance Dashboard</title>
     <link rel="stylesheet" href="css/main.css" />
     <link rel="stylesheet" href="css/alertsView.css" />
+    <link rel="stylesheet" href="css/login.css"/>
 </head>
 <body>
 
@@ -15,12 +16,87 @@
     <div class="nav-items">
         <span>Dashboard</span>
         <span>Reports</span>
-        <span>Settings</span>
+        <!-- Admin-only actions -->
+        <span id="createEngineerSpan">Add User</span>
         <span id="connectionStatus" class="connection-status">🟡 Connecting...</span>
+        <!-- Logout span; initially hidden -->
+        <span id="logoutBtn">Logout</span>
     </div>
 </header>
 
-<div class="layout">
+<!-- Login Section -->
+<div id="loginSection" class="login-container">
+    <div class="login-card">
+        <div class="login-header">
+            <h2>📶 Network Monitor</h2>
+            <p>Please sign in to continue</p>
+        </div>
+        <div class="login-body">
+            <!-- Error message container (initially hidden) -->
+            <div id="loginError" class="error-message" style="display: none;"></div>
+
+            <form id="loginForm" class="login-form">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" placeholder="Enter username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="Enter password" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Sign In</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Logout Confirmation Modal -->
+<div id="logoutModal" class="modal" style="display: none;">
+    <div class="modal-content confirmation-modal">
+        <div class="modal-header">
+            <h3>Confirm Logout</h3>
+            <button class="modal-close" id="closeLogoutModal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p>Are you sure you want to logout?</p>
+        </div>
+        <div class="modal-footer">
+            <button id="confirmLogoutBtn" class="btn btn-danger">Logout</button>
+            <button id="cancelLogoutBtn" class="btn btn-secondary">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<!-- Create Engineer Modal -->
+<div id="createEngineerModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Create Engineer Account</h3>
+            <button class="modal-close" id="closeCreateModal">&times;</button>
+        </div>
+        <form id="createEngineerForm">
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="engineerUsername">Username</label>
+                    <input type="text" id="engineerUsername" placeholder="Enter username" required>
+                </div>
+                <div class="form-group">
+                    <label for="engineerPassword">Password</label>
+                    <input type="password" id="engineerPassword" placeholder="Enter password" required>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-success">Create Account</button>
+                <button type="button" class="btn btn-secondary" id="cancelCreateBtn">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Success/Error Notifications Container -->
+<div id="notificationsContainer"></div>
+
+<div id="dashboardSection" class="layout">
 
     <!-- ===== SIDEBAR ===== -->
     <aside class="sidebar">
@@ -81,18 +157,20 @@
             </div>
         </div>
 
-
     </main>
 
 </div>
 
 <!-- =================== JAVASCRIPT =================== -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <!-- application modules -->
 <script type="module" src="js/realTimeMetrics.js"></script>
 <script type="module" src="js/alertsManager.js"></script>
 <script type="module" src="js/nodesView.js"></script>
+<script type="module" src="js/alertsView.js"></script>
 <script type="module" src="js/main.js"></script>
+<script src="js/login.js"></script>
 
 </body>
 </html>

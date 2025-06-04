@@ -1,0 +1,359 @@
+/* ===== LOGIN STYLES ===== */
+.login-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+.login-card {
+    background: #2a2a2a;
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    width: 100%;
+    max-width: 400px;
+    margin: 2rem;
+    border: 1px solid #444;
+    overflow: hidden;
+}
+
+.login-header {
+    background: linear-gradient(135deg, #00d4aa, #00c299);
+    color: white;
+    padding: 2rem;
+    text-align: center;
+}
+
+.login-header h2 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.8rem;
+    font-weight: 600;
+}
+
+.login-header p {
+    margin: 0;
+    opacity: 0.9;
+    font-size: 1rem;
+}
+
+.login-body {
+    padding: 2rem;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-group label {
+    color: #ccc;
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.form-group input {
+    background: #333;
+    border: 2px solid #444;
+    border-radius: 8px;
+    padding: 0.75rem;
+    color: #fff;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #00d4aa;
+    box-shadow: 0 0 0 3px rgba(0, 212, 170, 0.1);
+}
+
+.form-group input::placeholder {
+    color: #888;
+}
+
+.btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #00d4aa, #00c299);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #00c299, #00b088);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 212, 170, 0.3);
+}
+
+.btn-secondary {
+    background: #666;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: #555;
+}
+
+.btn-danger {
+    background: #ff4757;
+    color: white;
+}
+
+.btn-danger:hover {
+    background: #ff3742;
+}
+
+.btn-success {
+    background: #00d4aa;
+    color: white;
+}
+
+.btn-success:hover {
+    background: #00c299;
+}
+
+.error-message {
+    background: rgba(255, 71, 87, 0.1);
+    border: 1px solid #ff4757;
+    border-radius: 8px;
+    padding: 1rem;
+    color: #ff4757;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+}
+
+/* ===== MODAL STYLES (Consistent with main app) ===== */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    animation: fadeIn 0.3s ease;
+}
+
+.modal-content {
+    background: #2a2a2a;
+    border-radius: 12px;
+    max-width: 500px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    border: 1px solid #444;
+}
+
+.confirmation-modal {
+    max-width: 400px;
+    text-align: center;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    border-bottom: 1px solid #444;
+}
+
+.modal-header h3 {
+    color: #fff;
+    margin: 0;
+    font-size: 1.2rem;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    color: #999;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    line-height: 1;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.modal-close:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.modal-body {
+    padding: 1.5rem;
+}
+
+.modal-body .form-group {
+    margin-bottom: 1rem;
+}
+
+.modal-body .form-group:last-child {
+    margin-bottom: 0;
+}
+
+.modal-footer {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    padding: 1.5rem;
+    border-top: 1px solid #444;
+}
+
+.confirmation-modal .modal-footer {
+    justify-content: center;
+}
+
+.confirmation-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.confirmation-modal .modal-body {
+    padding: 2rem 1.5rem;
+}
+
+.confirmation-modal .modal-body p {
+    color: #ccc;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* ===== NOTIFICATIONS ===== */
+#notificationsContainer {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1100;
+    pointer-events: none;
+}
+
+.notification {
+    background: #2a2a2a;
+    border: 1px solid #444;
+    border-radius: 8px;
+    padding: 1rem 1.5rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+    animation: slideInRight 0.3s ease;
+    pointer-events: auto;
+    min-width: 300px;
+}
+
+.notification.success {
+    border-left: 4px solid #00d4aa;
+    background: linear-gradient(135deg, #2a2a2a 0%, rgba(0, 212, 170, 0.1) 100%);
+}
+
+.notification.error {
+    border-left: 4px solid #ff4757;
+    background: linear-gradient(135deg, #2a2a2a 0%, rgba(255, 71, 87, 0.1) 100%);
+}
+
+.notification-content {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: #fff;
+}
+
+.notification-icon {
+    font-size: 1.2rem;
+}
+
+.notification-message {
+    font-weight: 500;
+    flex: 1;
+}
+
+.notification-close {
+    background: none;
+    border: none;
+    color: #999;
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 0.25rem;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.notification-close:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 768px) {
+    .login-card {
+        margin: 1rem;
+        max-width: none;
+    }
+
+    .login-header {
+        padding: 1.5rem;
+    }
+
+    .login-body {
+        padding: 1.5rem;
+    }
+
+    .modal-content {
+        width: 95%;
+        margin: 1rem;
+    }
+
+    .modal-footer {
+        flex-direction: column;
+    }
+
+    .confirmation-modal .modal-footer {
+        flex-direction: row;
+    }
+}

@@ -12,7 +12,7 @@ export function startRealTimeKPIUpdates() {
     console.log("🚀 Starting Real-Time KPI Updates");
     initializeChart();
     updateKPIData(); // Initial load
-   // setInterval(updateKPIData, UPDATE_INTERVAL);
+    // setInterval(updateKPIData, UPDATE_INTERVAL);
     startUpdateInterval(); // Start the interval
 
 }
@@ -38,6 +38,15 @@ export function resumeUpdates() {
     isPaused = false;
     console.log("▶️ KPI updates resumed");
     updateKPIData(); // Immediate update when resuming
+}
+
+export function stopAllUpdates() {
+    isPaused = true;
+    if (updateIntervalId) {
+        clearInterval(updateIntervalId);
+        updateIntervalId = null;
+    }
+    console.log("🛑 All KPI updates stopped");
 }
 
 export function isPausedState() {
@@ -131,10 +140,24 @@ function initializeChart() {
 
 async function updateKPIData() {
     try {
-        // Fetch real-time metrics from your REST API
+        // Get auth token from localStorage
+        const token = localStorage.getItem("authToken");
+        const headers = {
+            'Content-Type': 'application/json'
+        };
+
+        if (token) {
+            headers['Authorization'] = 'Bearer ' + token;
+        }
+
+        // Fetch real-time metrics from your REST API with authentication
         const [summaryResponse, realtimeResponse] = await Promise.all([
-            fetch(`${API_BASE_URL}/summary`),
-            fetch(`${API_BASE_URL}/realtime`)
+            fetch(`${API_BASE_URL}/summary`, {
+                headers: headers
+            }),
+            fetch(`${API_BASE_URL}/realtime`, {
+                headers: headers
+            })
         ]);
 
         if (!summaryResponse.ok || !realtimeResponse.ok) {
