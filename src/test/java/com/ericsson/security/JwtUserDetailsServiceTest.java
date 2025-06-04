@@ -2,6 +2,7 @@ package com.ericsson.security;
 
 import com.ericsson.model.EngineerEntity;
 import com.ericsson.repository.UserRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
@@ -20,12 +21,18 @@ class JwtUserDetailsServiceTest {
     @Mock
     private UserRepository userRepository;
 
-    @InjectMocks
     private JwtUserDetailsService jwtUserDetailsService;
+
+    private final String adminBcryptPassword = "$2a$10$UuFEAl3WP8LGU6Tu7I0COuvyelyGVExd58J0yLA/cwkFv2m4bwaTu";
+
+    @BeforeEach
+    void setUp() {
+        // Manually create service and inject the admin bcrypt password
+        jwtUserDetailsService = new JwtUserDetailsService(adminBcryptPassword, userRepository);
+    }
 
     @Test
     void loadUserByUsername_shouldReturnAdminUser_whenUsernameIsAdmin() {
-
         UserDetails userDetails = jwtUserDetailsService.loadUserByUsername("admin");
 
         assertEquals("admin", userDetails.getUsername());

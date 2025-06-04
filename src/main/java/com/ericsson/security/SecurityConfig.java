@@ -19,6 +19,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 	private final JwtUtil jwtUtil;
 	private final JwtUserDetailsService jwtUserDetailsService;
+	
 	public SecurityConfig(JwtUtil jwtUtil, JwtUserDetailsService jwtUserDetailsService) {
 		this.jwtUtil = jwtUtil;
 		this.jwtUserDetailsService = jwtUserDetailsService;

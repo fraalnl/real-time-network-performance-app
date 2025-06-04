@@ -8,7 +8,7 @@ import org.mockito.Mockito;
 
 import java.time.LocalDateTime;
 
-public class NetworkPerformanceConsumerTest {
+class NetworkPerformanceConsumerTest {
 
     @Test
     void testConsumePerformanceData() {
@@ -16,6 +16,7 @@ public class NetworkPerformanceConsumerTest {
         NetworkPerformanceConsumer consumer = new NetworkPerformanceConsumer(repository);
 
         PerformanceData data = new PerformanceData(1, 2, 20.0, 100.0, 0.5, LocalDateTime.now());
+        // record: Rename this variable to not match a restricted identifier.
         ConsumerRecord<String, PerformanceData> record = new ConsumerRecord<>("network-performance", 0, 0, null, data);
 
         PerformanceData expectedEntity = new PerformanceData();

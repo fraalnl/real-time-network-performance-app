@@ -16,3 +16,7 @@ spring:
         format_sql: true
   main:
     allow-bean-definition-overriding: true
+
+admin:
+  password:
+    bcrypt: "$2a$10$UuFEAl3WP8LGU6Tu7I0COuvyelyGVExd58J0yLA/cwkFv2m4bwaTu"

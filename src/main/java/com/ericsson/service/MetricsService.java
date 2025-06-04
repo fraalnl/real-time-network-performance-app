@@ -4,7 +4,6 @@ import com.ericsson.model.PerformanceData;
 import com.ericsson.repository.PerformanceDataRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -23,7 +22,6 @@ public class MetricsService {
     private static final double LOW_THROUGHPUT_THRESHOLD = 50.0; // Mbps
     private static final double HIGH_ERROR_RATE_THRESHOLD = 2.0; // %
 
-    @Autowired
     public MetricsService(PerformanceDataRepository repository) {
         this.repository = repository;
     }
@@ -57,7 +55,6 @@ public class MetricsService {
         logger.debug("Retrieved latest metrics for {} nodes", result.size());
         return result;
     }
-
 
     /**
      * Get KPI summary for dashboard overview
@@ -231,7 +228,6 @@ public class MetricsService {
 
         return grouped;
     }
-
 
     /**
      * Check if a node is healthy based on thresholds

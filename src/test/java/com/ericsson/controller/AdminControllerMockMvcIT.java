@@ -22,14 +22,14 @@ is still running for real
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-public class AdminControllerMockMvcIT {
+class AdminControllerMockMvcIT {
 
     @Autowired
     private MockMvc mockMvc;
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    public void testCreateEngineerWithAdminRole() throws Exception {
+    void testCreateEngineerWithAdminRole() throws Exception {
         EngineerDto dto = new EngineerDto();
         dto.setUsername("engineerUser");
         dto.setPassword("password123");

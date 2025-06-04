@@ -21,7 +21,8 @@ public class EngineerEntity {
     @Column(nullable = false)
     private String role;
 
-    public EngineerEntity() {}
+    public EngineerEntity() { // no-arg constructor needed
+    }
 
     // Getters and Setters
     public Long getId() {

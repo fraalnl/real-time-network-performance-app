@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @WithMockUser(roles = "ADMIN")
-public class MetricsServiceIT {
+class MetricsServiceIT {
 
     @Autowired
     private MetricsService metricsService;

@@ -18,7 +18,7 @@ public class PerformanceData {
 
     private LocalDateTime timestamp;
 
-    public PerformanceData() {
+    public PerformanceData() { // no-arg constructor needed
     }
 
     public PerformanceData(Integer nodeId, Integer networkId, Double latency, Double throughput, Double errorRate, LocalDateTime timestamp) {

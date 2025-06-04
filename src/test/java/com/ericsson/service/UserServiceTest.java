@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import com.ericsson.dto.EngineerDto;
+import com.ericsson.exception.InvalidUserInputException;
+import com.ericsson.exception.UserAlreadyExistsException;
 import com.ericsson.model.EngineerEntity;
 import com.ericsson.repository.UserRepository;
 import com.ericsson.util.JwtUtil;
@@ -61,7 +63,7 @@ class UserServiceTest {
     void testCreateEngineer_UsernameAlreadyExists() {
         when(userRepository.existsByUsername("testuser")).thenReturn(true);
 
-        RuntimeException ex = assertThrows(RuntimeException.class, () -> userService.createEngineer(engineerDto));
+        UserAlreadyExistsException ex = assertThrows(UserAlreadyExistsException.class, () -> userService.createEngineer(engineerDto));
 
         assertEquals("Username 'testuser' already exists", ex.getMessage());
         verify(userRepository, never()).save(any());
@@ -71,7 +73,7 @@ class UserServiceTest {
     void testCreateEngineer_UsernameEmpty() {
         engineerDto.setUsername("  ");
 
-        RuntimeException ex = assertThrows(RuntimeException.class, () -> userService.createEngineer(engineerDto));
+        InvalidUserInputException ex = assertThrows(InvalidUserInputException.class, () -> userService.createEngineer(engineerDto));
 
         assertEquals("Username cannot be empty", ex.getMessage());
     }
@@ -80,7 +82,7 @@ class UserServiceTest {
     void testCreateEngineer_PasswordEmpty() {
         engineerDto.setPassword("");
 
-        RuntimeException ex = assertThrows(RuntimeException.class, () -> userService.createEngineer(engineerDto));
+        InvalidUserInputException ex = assertThrows(InvalidUserInputException.class, () -> userService.createEngineer(engineerDto));
 
         assertEquals("Password cannot be empty", ex.getMessage());
     }

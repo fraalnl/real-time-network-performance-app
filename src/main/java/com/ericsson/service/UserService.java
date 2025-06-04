@@ -2,8 +2,12 @@ package com.ericsson.service;
 
 import com.ericsson.repository.UserRepository;
 import com.ericsson.dto.EngineerDto;
+import com.ericsson.exception.InvalidUserInputException;
+import com.ericsson.exception.UserAlreadyExistsException;
+import com.ericsson.exception.UserCreationException;
 import com.ericsson.model.EngineerEntity;
 import com.ericsson.util.JwtUtil;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -20,21 +24,20 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
         this.jwtUtil = jwtUtil;
     }
-
+    
     public String createEngineer(final EngineerDto dto) {
-        // Check if username already exists
-        if (userRepository.existsByUsername(dto.getUsername())) {
-            throw new RuntimeException("Username '" + dto.getUsername() + "' already exists");
-        }
+    	if (userRepository.existsByUsername(dto.getUsername())) {
+    	    throw new UserAlreadyExistsException("Username '" + dto.getUsername() + "' already exists");
+    	}
 
-        // Validate input
-        if (dto.getUsername() == null || dto.getUsername().trim().isEmpty()) {
-            throw new RuntimeException("Username cannot be empty");
-        }
+    	// Validate input
+    	if (dto.getUsername() == null || dto.getUsername().trim().isEmpty()) {
+    	    throw new InvalidUserInputException("Username cannot be empty");
+    	}
 
-        if (dto.getPassword() == null || dto.getPassword().trim().isEmpty()) {
-            throw new RuntimeException("Password cannot be empty");
-        }
+    	if (dto.getPassword() == null || dto.getPassword().trim().isEmpty()) {
+    	    throw new InvalidUserInputException("Password cannot be empty");
+    	}
 
         // Create new user
         EngineerEntity user = new EngineerEntity();
@@ -46,7 +49,7 @@ public class UserService {
             userRepository.save(user);
             return jwtUtil.generateToken(user.getUsername(), user.getRole());
         } catch (Exception e) {
-            throw new RuntimeException("Failed to create user: " + e.getMessage());
+            throw new UserCreationException("Failed to create user: " + e.getMessage(), e);
         }
     }
 }

@@ -4,7 +4,6 @@ import com.ericsson.model.PerformanceData;
 import com.github.javafaker.Faker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -38,7 +37,6 @@ public class SimulatorService {
     private static final double BASE_THROUGHPUT = 100.0;
     private static final double BASE_ERROR_RATE = 0.1;
 
-    @Autowired
     public SimulatorService(NetworkPerformancePublisher publisher) {
         this.publisher = publisher;
         initializeNodeProfiles();

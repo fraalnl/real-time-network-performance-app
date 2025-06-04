@@ -7,7 +7,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 
 import java.time.LocalDateTime;
 
-public class NetworkPerformancePublisherTest {
+class NetworkPerformancePublisherTest {
 
     @Test
     void testSendPerformanceData() {

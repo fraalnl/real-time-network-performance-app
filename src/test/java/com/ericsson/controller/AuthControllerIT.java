@@ -17,7 +17,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
-public class AuthControllerIT {
+class AuthControllerIT {
 
     @LocalServerPort
     private int port;
@@ -47,10 +47,10 @@ public class AuthControllerIT {
         assertThat(response.getStatusCode().is2xxSuccessful()).isTrue();
 
         Map<String, String> body = response.getBody();
-        assertThat(body).isNotNull();
-        assertThat(body).containsKeys("token", "role");
-        assertThat(body.get("role")).isEqualTo("ROLE_ADMIN");
-        assertThat(body.get("token")).isNotBlank();
+        assertThat(body)
+        .isNotNull()
+        .containsEntry("role", "ROLE_ADMIN")
+        .satisfies(map -> assertThat(map.get("token")).isNotBlank());
     }
 
     @Test
@@ -71,9 +71,9 @@ public class AuthControllerIT {
         assertThat(response.getStatusCode().value()).isEqualTo(401);
 
         Map<String, String> body = response.getBody();
-        assertThat(body).isNotNull();
-        assertThat(body).containsKey("error");
-        assertThat(body.get("error")).isEqualTo("Invalid credentials. Please try again.");
+        assertThat(body)
+        .isNotNull()
+        .containsEntry("error", "Invalid credentials. Please try again.");
     }
 
     @Test
@@ -94,8 +94,10 @@ public class AuthControllerIT {
         assertThat(response.getStatusCode().value()).isEqualTo(401);
 
         Map<String, String> body = response.getBody();
-        assertThat(body).isNotNull();
-        assertThat(body).containsKey("error");
-        assertThat(body.get("error")).isEqualTo("Invalid credentials. Please try again.");
+        assertThat(body)
+        .isNotNull()
+        .satisfies(map -> assertThat(map)
+            .containsEntry("error", "Invalid credentials. Please try again."));
+
     }
 }

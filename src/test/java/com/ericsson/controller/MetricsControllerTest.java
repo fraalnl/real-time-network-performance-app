@@ -21,7 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WithMockUser(roles = "ADMIN")
 @WebMvcTest(MetricsController.class)
-public class MetricsControllerTest {
+class MetricsControllerTest {
 
     @Autowired
     private MockMvc mockMvc;

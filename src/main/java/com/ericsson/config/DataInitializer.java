@@ -24,7 +24,6 @@ public class DataInitializer implements CommandLineRunner {
     @Override
     public void run(String... args) {
         if (repository.count() > 0) {
-            System.out.println("⚠️ Seed data already present. Skipping.");
             return;
         }
 
@@ -58,7 +57,5 @@ public class DataInitializer implements CommandLineRunner {
 
             repository.save(data);
         }
-
-        System.out.println("✅ Seeded 20 records with 20 nodes mapped to 4 networks");
     }
 }
