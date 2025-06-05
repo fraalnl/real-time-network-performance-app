@@ -27,11 +27,19 @@ function initializeDashboard() {
     window.nodesView = new NodesView();
     window.nodesView.initialize();
 
+//<<<<<<< HEAD
     // 4. Initialize alerts view and make it globally available
     window.alertsView = new AlertsView();
     window.alertsView.initialize();
 
     // 5. Setup control buttons
+// =======
+    // 4. Initialize analytics view
+    window.analyticsView.initialize();
+//
+//
+//     // 4. Setup control buttons
+// >>>>>>> f4961f4 (working on the historical data frontend)
     setupControlButtons();
 
     // 6. Initialize connection status
@@ -209,12 +217,14 @@ function handleNavigation(section) {
         case 'nodes':
             showNodesView();
             break;
+
         case 'alerts':
             showAlertsView();
             break;
         case 'analytics':
             showAnalyticsView();
             break;
+
         default:
             console.log(`❓ Unknown navigation: "${section}" -> "${cleanSection}"`);
             // Default to dashboard if unknown
@@ -246,12 +256,18 @@ function handleNavigation(section) {
             window.alertsView.hideAlertsView();
             console.log('✅ Alerts view hidden');
         }
+        if (window.analyticsView) {
+            window.analyticsView.hideAnalyticsView();
+            console.log('✅ Analytics view hidden');
+        }
+
     }
 
     function showNodesView() {
         console.log('🖥️ Activating Nodes view');
 
         if (window.nodesView) {
+            if (window.analyticsView) window.analyticsView.hideAnalyticsView();
             window.nodesView.showNodesView();
             console.log('✅ Nodes view activated');
         } else {
@@ -262,6 +278,7 @@ function handleNavigation(section) {
     }
 
     function showAlertsView() {
+        if (window.analyticsView) window.analyticsView.hideAnalyticsView();
         console.log('🚨 Activating Alerts view');
 
         if (window.alertsView) {
@@ -275,10 +292,16 @@ function handleNavigation(section) {
     }
 
     function showAnalyticsView() {
-        console.log('📈 Analytics view not implemented yet');
-        // Placeholder for future analytics implementation
-        showDashboardView(); // Fallback to dashboard for now
+        if (window.analyticsView) {
+            window.analyticsView.showAnalyticsView();
+            console.log('✅ Analytics view activated');
+        } else {
+            console.error('❌ AnalyticsView not available! Check initialization.');
+            // Fallback to dashboard
+            showDashboardView();
+        }
     }
+
 
     // Add window focus/blur handlers
     window.addEventListener('focus', () => {
