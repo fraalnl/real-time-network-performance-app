@@ -12,17 +12,17 @@ pipeline {
         DOCKER_IMAGE = 'network-monitor'
         DOCKER_TAG = 'latest'
 //        DOCKERHUB_CREDENTIALS = 'dockerhub-credentials' // Jenkins credentials for Docker Hub login, configured
-       DOCKERHUB_USERNAME = 'fraalnl'
+        DOCKERHUB_USERNAME = 'fraalnl'
     }
 
     stages {
         stage('Build') {
             steps {
-                checkout([$class: 'GitSCM',
+                checkout([$class           : 'GitSCM',
                           userRemoteConfigs: [[
                                                       url: 'https://github.com/fraalnl/real-time-network-performance-app',
                                               ]],
-                          branches: [[name: 'development']]])
+                          branches         : [[name: 'development']]])
                 bat "mvn clean package -DskipTests"
             }
         }
@@ -36,6 +36,24 @@ pipeline {
                     echo 'Unit tests completed'
                     junit '**/target/surefire-reports/*.xml'
                 }
+            }
+        }
+
+        stage('Docker Build') {
+            steps {
+                script {
+                    String imageName = "${env.DOCKERHUB_USERNAME}/${env.DOCKER_IMAGE}:${env.DOCKER_TAG}"
+                    echo "Building Docker image: ${imageName}"
+                    bat "docker build -t ${imageName} ."
+                    echo "Docker build complete"
+                }
+            }
+        }
+
+        stage('Docker Compose Up') {
+            steps {
+                echo 'Starting Docker containers with docker-compose (no build)...'
+                bat 'docker-compose up -d --no-build'
             }
         }
 
@@ -72,24 +90,6 @@ pipeline {
                 always {
                     echo 'SonarQube analysis completed'
                 }
-            }
-        }
-
-        stage('Docker Build') {
-            steps {
-                script {
-                    String imageName = "${env.DOCKERHUB_USERNAME}/${env.DOCKER_IMAGE}:${env.DOCKER_TAG}"
-                    echo "Building Docker image: ${imageName}"
-                    bat "docker build -t ${imageName} ."
-                    echo "Docker build complete"
-                }
-            }
-        }
-
-        stage('Docker Compose Up') {
-            steps {
-                echo 'Starting Docker containers with docker-compose (no build)...'
-                bat 'docker-compose up -d --no-build'
             }
         }
 
