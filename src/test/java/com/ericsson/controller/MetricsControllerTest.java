@@ -13,6 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -99,5 +100,32 @@ class MetricsControllerTest {
                 .andExpect(jsonPath("$.critical").isEmpty())
                 .andExpect(jsonPath("$.warning").isEmpty());
     }
+
+    @Test
+    @WithMockUser(roles = "ADMIN") // or "ENGINEER"
+    void testGetSummaryForRange() throws Exception {
+        String range = "last_1_hour";
+
+        Map<String, Object> mockSummary = new HashMap<>();
+        mockSummary.put("range", range);
+        mockSummary.put("avgLatency", 123.45);
+        mockSummary.put("avgThroughput", 456.78);
+        mockSummary.put("avgErrorRate", 0.01);
+        mockSummary.put("sampleSize", 50);
+
+        Mockito.when(metricsService.getKpiSummaryForRange(range)).thenReturn(mockSummary);
+
+        mockMvc.perform(get("/api/metrics/summary/range")
+                        .param("range", range)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.range").value(range))
+                .andExpect(jsonPath("$.avgLatency").value(123.45))
+                .andExpect(jsonPath("$.avgThroughput").value(456.78))
+                .andExpect(jsonPath("$.avgErrorRate").value(0.01))
+                .andExpect(jsonPath("$.sampleSize").value(50));
+    }
+
+
 }
 
