@@ -27,11 +27,19 @@ function initializeDashboard() {
     window.nodesView = new NodesView();
     window.nodesView.initialize();
 
+//<<<<<<< HEAD
     // 4. Initialize alerts view and make it globally available
     window.alertsView = new AlertsView();
     window.alertsView.initialize();
 
     // 5. Setup control buttons
+// =======
+//     // 4. Initialize analytics view
+//     window.analyticsView.initialize();
+//
+//
+//     // 4. Setup control buttons
+// >>>>>>> f4961f4 (working on the historical data frontend)
     setupControlButtons();
 
     // 6. Initialize connection status
@@ -209,12 +217,19 @@ function handleNavigation(section) {
         case 'nodes':
             showNodesView();
             break;
+//<<<<<<< HEAD
         case 'alerts':
             showAlertsView();
             break;
         case 'analytics':
             showAnalyticsView();
             break;
+// =======
+//         case 'analytics':
+//             window.analyticsView.showAnalyticsView();
+//             break;
+//
+// >>>>>>> f4961f4 (working on the historical data frontend)
         default:
             console.log(`❓ Unknown navigation: "${section}" -> "${cleanSection}"`);
             // Default to dashboard if unknown
