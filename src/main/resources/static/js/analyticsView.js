@@ -1,17 +1,15 @@
 // analyticsView.js
-// Handles the Analytics view with historical KPI summary
+// Redesigned to match alerts style with tab-based layout
 
 const API_BASE_URL = 'http://localhost:8081/api/metrics';
 
 class AnalyticsView {
     constructor() {
-        this.analyticsView = null;
         this.isActive = false;
     }
 
     initialize() {
         this.createAnalyticsView();
-        this.setupEventListeners();
         console.log("📊 Analytics View initialized");
     }
 
@@ -19,19 +17,25 @@ class AnalyticsView {
         const analyticsHTML = `
             <div id="analyticsView" class="view-container" style="display: none;">
                 <div class="analytics-header">
-                    <h2>Historical KPI Summary</h2>
-                    <div class="analytics-controls">
-                        <button class="control-btn" id="range5min">Last 5 Minutes</button>
-                        <button class="control-btn" id="range1hr">Last 1 Hour</button>
-                        <button class="control-btn" id="range24hr">Last 24 Hours</button>
+                    <h2>Analytics</h2>
+                    <p class="text-muted">Historical KPI Summary based on selected time ranges</p>
+                </div>
+
+                <div class="analytics-tabs">
+                    <button id="tab5m" class="tab-btn active" data-tab="5m">⏱️ Last 5 Minutes</button>
+                    <button id="tab1h" class="tab-btn" data-tab="1h">🕒 Last 1 Hour</button>
+                    <button id="tab24h" class="tab-btn" data-tab="24h">🗓️ Last 24 Hours</button>
+                </div>
+
+                <div class="analytics-content">
+                    <div id="analyticsSummary" class="analytics-section">
+                        <!-- KPI summary will be populated here -->
                     </div>
                 </div>
 
-                <div class="analytics-summary bg-dark text-light border rounded p-3">
-                    <p><strong>Latency:</strong> <span id="latencyVal">-</span> ms</p>
-                    <p><strong>Throughput:</strong> <span id="throughputVal">-</span> Mbps</p>
-                    <p><strong>Error Rate:</strong> <span id="errorRateVal">-</span> %</p>
-                    <p><strong>Samples:</strong> <span id="sampleCount">-</span></p>
+                <div id="analyticsLoading" class="loading-indicator" style="display: none;">
+                    <div class="spinner"></div>
+                    <span>Loading summary...</span>
                 </div>
             </div>
         `;
@@ -39,32 +43,49 @@ class AnalyticsView {
         const mainContent = document.querySelector('.main-content');
         if (mainContent) {
             mainContent.insertAdjacentHTML('beforeend', analyticsHTML);
-            this.analyticsView = document.getElementById('analyticsView');
         }
+
+        this.setupEventListeners();
     }
 
     setupEventListeners() {
-        document.getElementById('range5min')?.addEventListener('click', () => this.loadKpiSummary('last_5_minutes'));
-        document.getElementById('range1hr')?.addEventListener('click', () => this.loadKpiSummary('last_1_hour'));
-        document.getElementById('range24hr')?.addEventListener('click', () => this.loadKpiSummary('last_24_hours'));
+        const tabs = document.querySelectorAll('.analytics-tabs .tab-btn');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', (e) => {
+                e.preventDefault();
+
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+
+                const range = tab.dataset.tab;
+                this.loadAnalyticsSummary(range);
+            });
+        });
     }
 
     async showAnalyticsView() {
         this.hideAllViews();
 
-        if (this.analyticsView) {
-            this.analyticsView.style.display = 'block';
+        const analyticsView = document.getElementById('analyticsView');
+        if (analyticsView) {
+            analyticsView.style.display = 'block';
             this.isActive = true;
-            this.loadKpiSummary('last_5_minutes');
-            console.log("📊 Analytics view activated");
+            console.log("📊 Analytics view displayed");
+
+            const activeTab = document.querySelector('.analytics-tabs .tab-btn.active');
+            if (activeTab) {
+                const range = activeTab.dataset.tab;
+                this.loadAnalyticsSummary(range);
+            }
         }
     }
 
     hideAnalyticsView() {
-        if (this.analyticsView) {
-            this.analyticsView.style.display = 'none';
+        const analyticsView = document.getElementById('analyticsView');
+        if (analyticsView) {
+            analyticsView.style.display = 'none';
             this.isActive = false;
-            console.log("📊 Analytics view deactivated");
+            console.log("📊 Analytics view hidden");
         }
     }
 
@@ -72,34 +93,41 @@ class AnalyticsView {
         const kpiCards = document.querySelector('.kpi-cards');
         const chartContainer = document.querySelector('.chart-container');
         const nodesView = document.getElementById('nodesView');
+        const alertsView = document.getElementById('alertsView');
 
         if (kpiCards) kpiCards.style.display = 'none';
         if (chartContainer) chartContainer.style.display = 'none';
         if (nodesView) nodesView.style.display = 'none';
+        if (alertsView) alertsView.style.display = 'none';
     }
 
-    async loadKpiSummary(range) {
+    async loadAnalyticsSummary(range) {
+        const loading = document.getElementById('analyticsLoading');
+        const container = document.getElementById('analyticsSummary');
+
         try {
+            if (loading) loading.style.display = 'flex';
+            if (container) container.innerHTML = '';
+
             const token = localStorage.getItem("authToken");
             const headers = token ? { 'Authorization': 'Bearer ' + token } : {};
+            const response = await fetch(`${API_BASE_URL}/summary?range=${range}`, { headers });
 
-            const response = await fetch(`${API_BASE_URL}/summary/range?range=${range}`, {
-                method: 'GET',
-                headers
-            });
-
-            if (!response.ok) throw new Error("Failed to load KPI summary");
+            if (!response.ok) throw new Error('Failed to load KPI summary');
 
             const data = await response.json();
-
-            document.getElementById('latencyVal').innerText = data.avgLatency.toFixed(2);
-            document.getElementById('throughputVal').innerText = data.avgThroughput.toFixed(2);
-            document.getElementById('errorRateVal').innerText = data.avgErrorRate.toFixed(2);
-            document.getElementById('sampleCount').innerText = data.sampleSize;
-
-            console.log(`📈 Loaded KPI summary for ${range}`);
-        } catch (error) {
-            console.error("❌ Error loading KPI summary:", error);
+            if (container) {
+                container.innerHTML = `
+                    <div><strong>Latency:</strong> ${data.averageLatency} ms</div>
+                    <div><strong>Throughput:</strong> ${data.averageThroughput} Mbps</div>
+                    <div><strong>Error Rate:</strong> ${data.averageErrorRate} %</div>
+                `;
+            }
+        } catch (err) {
+            console.error("❌ Error fetching analytics summary:", err);
+            if (container) container.innerHTML = '❌ Error loading summary';
+        } finally {
+            if (loading) loading.style.display = 'none';
         }
     }
 
@@ -109,8 +137,5 @@ class AnalyticsView {
 }
 
 export { AnalyticsView };
-
-// Global instance
 window.analyticsView = new AnalyticsView();
-
 console.log("📊 AnalyticsView module loaded");
