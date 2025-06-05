@@ -31,6 +31,10 @@ function initializeDashboard() {
     window.nodesView = new NodesView();
     window.nodesView.initialize();
 
+    // 4. Initialize analytics view
+    window.analyticsView.initialize();
+
+
     // 4. Setup control buttons
     setupControlButtons();
 
@@ -212,6 +216,9 @@ function handleNavigation(section) {
             break;
         case 'nodes':
             showNodesView();
+            break;
+        case 'analytics':
+            window.analyticsView.showAnalyticsView();
             break;
 
         default:
