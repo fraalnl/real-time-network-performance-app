@@ -5,8 +5,18 @@ server:
     include-message: always
 
 spring:
+  kafka:
+    bootstrap-servers: localhost:9092
+
   show-sql: true
-  # Set batch size for batch processing, this is needed for importing 30,000 records under 2 minutes
   profiles:
-    active: h2 # Change this to 'mysql' for production, 'h2' for development
+    active: mysql # Change this to 'mysql' for production, 'h2' for development
+
+admin:
+  password:
+    bcrypt: "$2a$10$UuFEAl3WP8LGU6Tu7I0COuvyelyGVExd58J0yLA/cwkFv2m4bwaTu"
+
+jwt:
+  secret: "admin123admin123admin123admin123"  # 32 characters for HS256
+  expiration-ms: 86400000  # 1 day expiration in milliseconds
 

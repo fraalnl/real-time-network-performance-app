@@ -1,1 +1,182 @@
-<h1>Hello Team1</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Network Performance Dashboard</title>
+    <link rel="stylesheet" href="css/main.css" />
+    <link rel="stylesheet" href="css/alertsView.css" />
+    <link rel="stylesheet" href="css/login.css"/>
+</head>
+<body>
+
+<!-- ===== TOP NAVBAR ===== -->
+<header class="navbar">
+    <div class="logo">📶 Network Monitor</div>
+    <div class="nav-items">
+        <span>Dashboard</span>
+        <!-- Admin-only actions -->
+        <span id="createEngineerSpan">Add User</span>
+        <span id="connectionStatus" class="connection-status">🟡 Connecting...</span>
+        <!-- Logout; initially hidden -->
+        <span id="logoutBtn">Logout</span>
+    </div>
+</header>
+
+<!-- Login Section -->
+<div id="loginSection" class="login-container">
+    <div class="login-card">
+        <div class="login-header">
+            <h2>📶 Network Monitor</h2>
+            <p>Please sign in to continue</p>
+        </div>
+        <div class="login-body">
+            <!-- Error message container (initially hidden) -->
+            <div id="loginError" class="error-message" style="display: none;"></div>
+
+            <form id="loginForm" class="login-form">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" placeholder="Enter username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="Enter password" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Sign In</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Logout Confirmation Modal -->
+<div id="logoutModal" class="modal" style="display: none;">
+    <div class="modal-content confirmation-modal">
+        <div class="modal-header">
+            <h3>Confirm Logout</h3>
+            <button class="modal-close" id="closeLogoutModal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p>Are you sure you want to logout?</p>
+        </div>
+        <div class="modal-footer">
+            <button id="confirmLogoutBtn" class="btn btn-danger">Logout</button>
+            <button id="cancelLogoutBtn" class="btn btn-secondary">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<!-- Create Engineer Modal -->
+<div id="createEngineerModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Create Engineer Account</h3>
+            <button class="modal-close" id="closeCreateModal">&times;</button>
+        </div>
+        <form id="createEngineerForm">
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="engineerUsername">Username</label>
+                    <input type="text" id="engineerUsername" placeholder="Enter username" required>
+                </div>
+                <div class="form-group">
+                    <label for="engineerPassword">Password</label>
+                    <input type="password" id="engineerPassword" placeholder="Enter password" required>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-success">Create Account</button>
+                <button type="button" class="btn btn-secondary" id="cancelCreateBtn">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Success/Error Notifications Container -->
+<div id="notificationsContainer"></div>
+
+<div id="dashboardSection" class="layout">
+
+    <!-- ===== SIDEBAR ===== -->
+    <aside class="sidebar">
+        <h2>Navigation</h2>
+        <ul>
+            <li class="active">Dashboard</li>
+            <li>Analytics</li>
+            <li>Nodes</li>
+            <li>Alerts <span id="alertBadge" class="badge" style="display: none;">0</span></li>
+        </ul>
+
+        <!-- System Status Section -->
+        <div class="system-status">
+            <h3>System Status</h3>
+            <div class="status-item">
+                <span>Health:</span>
+                <span id="healthStatus">--/--</span>
+            </div>
+            <div class="status-item">
+                <span id="lastUpdate">Never updated</span>
+            </div>
+        </div>
+    </aside>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <main class="main-content">
+
+        <!-- Enhanced KPI Cards -->
+        <div class="kpi-cards">
+            <div class="kpi-card">
+                <h3>Average Latency</h3>
+                <p id="latency">-- ms</p>
+                <small class="kpi-subtitle">Network response time</small>
+            </div>
+            <div class="kpi-card">
+                <h3>Average Throughput</h3>
+                <p id="throughput">-- Mbps</p>
+                <small class="kpi-subtitle">Data transfer rate</small>
+            </div>
+            <div class="kpi-card">
+                <h3>Average Error Rate</h3>
+                <p id="errorRate">-- %</p>
+                <small class="kpi-subtitle">Packet loss percentage</small>
+            </div>
+        </div>
+
+        <!-- Chart Section -->
+        <div class="chart-container">
+            <div class="chart-header">
+                <h3>Real-Time Network KPIs</h3>
+                <div class="chart-controls">
+                    <button id="pauseBtn" class="control-btn">⏸️ Pause</button>
+                    <button id="refreshBtn" class="control-btn">🔄 Refresh</button>
+                </div>
+            </div>
+            <div class="chart-wrapper">
+                <canvas id="kpiChart"></canvas>
+            </div>
+        </div>
+
+    </main>
+
+</div>
+
+<!-- =================== JAVASCRIPT =================== -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- application modules -->
+<script type="module" src="js/realTimeMetrics.js"></script>
+<script type="module" src="js/alertsManager.js"></script>
+<script type="module" src="js/nodesView.js"></script>
+<script type="module" src="js/alertsView.js"></script>
+<script type="module" src="js/main.js"></script>
+<!--<<<<<< HEAD-->
+<script src="js/login.js"></script>
+<!--=======-->
+<!--<script type="module" src="js/login.js"></script>-->
+<!--added ks -->
+<script type="module" src="js/analyticsView.js"></script>
+
+<!--&gt;>>>>>> f4961f4 (working on the historical data frontend)-->
+
+</body>
+</html>
