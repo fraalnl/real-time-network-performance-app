@@ -1,4 +1,5 @@
 services:
+  # app service is a Java application (Spring Boot) that acts as a MySQL client
   app:
     build:
       context: .
@@ -7,7 +8,7 @@ services:
     # image: ${DOCKER_IMAGE}:${DOCKER_TAG}   # built by Jenkins
     # simply starts containers using the image already built by Jenkins
     ports:
-      - "8081:8081" # map container port 8081 to host port 8081
+      - "8081:8081" # host:container(App listens on 8081)
     environment:
       SPRING_PROFILES_ACTIVE: mysql
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/network_performance
@@ -28,12 +29,14 @@ services:
       # Creates a database named network_performance on startup
       MYSQL_DATABASE: network_performance
     ports:
-      # Maps MySQL container’s port 3306 to host machine’s port 3306,
-      # so you can connect from outside Docker (e.g. IDE or tools)
-      - "3306:3306"
+      # so you can connect from outside Docker (e.g. IDE, workbench)
+      - "3306:3306" # HostPort:ContainerPort
     volumes:
       - mysql-data:/var/lib/mysql # everything MySQL server needs to restore its state
     healthcheck:
+      # h=host, check MySQL server running on the host named mysql (name of the MySQL container or service)
+      # app container waits for MySQL to become healthy
+      # but integration tests do not run inside that container. They run on the Jenkins node
       test: [ "CMD", "mysqladmin", "ping", "-h", "mysql" ]
       interval: 10s
       timeout: 5s
@@ -49,7 +52,7 @@ services:
   kafka:
     image: bitnami/kafka:3.9
     ports:
-      - "9092:9092" # Exposes Kafka’s broker port to the host
+      - "9092:9092" # Jenkins node/PC: kafka container
     environment:
       KAFKA_BROKER_ID: 1 # A unique ID for this Kafka broker
       # KAFKA_CFG_PROCESS_ROLES: broker        # the role for this Kafka node

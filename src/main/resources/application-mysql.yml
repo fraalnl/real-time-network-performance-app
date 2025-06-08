@@ -1,6 +1,8 @@
 spring:
   datasource:
     # url: jdbc:mysql://localhost:3306/network_performance
+    # if in container, localhost=this container, mysql is in another container
+    # MySQL service in docker-compose.yml is called mysql
     url: jdbc:mysql://mysql:3306/network_performance
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root

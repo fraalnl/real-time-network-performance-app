@@ -1,4 +1,6 @@
 pipeline {
+    //Run all steps on any available Jenkins agent (e.g., your local machine or Jenkins server)
+    // not inside a container
     agent any
 
     tools {
@@ -59,7 +61,9 @@ pipeline {
 
         stage('Integration Tests & Publish Coverage') {
             steps {
-                bat 'mvn verify -Dsurefire.useFile=false -Dfailsafe.useFile=false'
+                // should skip unit tests, otherwise, run twice; send report to console for debugging, not to file
+                // run on Jekins agent, not in container, so use application-mysql.yml
+                bat 'mvn verify -Dsurefire.skip=true -Dfailsafe.useFile=false'
             }
             post {
                 always {
